@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: bancodedados123
+      MYSQL_PASSWORD: segredo123
+      MYSQL_ROOT_PASSWORD: senha123
+      MYSQL_USER: gabri123
+    ports:
+      - "3306:3306"
+    volumes:
+      - gabri_db:/var/lib/mysql
+
+volumes:
+  gabri_db:
