@@ -37,6 +37,7 @@ resource "aws_security_group" "securitygroup" {
 resource "aws_instance" "EC3server" {
   ami = "ami-0169aa51f6faf20d5"
   instance_type = "t3.micro"
+  user_data = file("user_data.sh")
   vpc_security_group_ids = [aws_security_group.securitygroup.id]
 }
 
