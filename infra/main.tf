@@ -28,16 +28,16 @@ resource "aws_security_group" "securitygroup" {
   // Regra de saida
   egress {
     from_port = 0 // Qualquer porta do 0.
-    to_port = 65550 // Até a porta 65550.
+    to_port = 65535 // Até a porta 65535.
     protocol = "tcp" // Forma de comunicação com o servidor
     cidr_blocks = ["0.0.0.0/0"] // Qualquer IP pode ser acessado na saida.
   }
 }
 
 resource "aws_instance" "EC3server" {
-  ami = "ami-0169aa51f6faf20d5"
+  ami = "ami-0de716d6197524dd9"
   instance_type = "t3.micro"
   user_data = file("user_data.sh")
   vpc_security_group_ids = [aws_security_group.securitygroup.id]
-}
+
 
