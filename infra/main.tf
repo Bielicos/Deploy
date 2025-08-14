@@ -25,6 +25,14 @@ resource "aws_security_group" "securitygroup" {
     cidr_blocks = ["0.0.0.0/0"] // Restringe quantos IPs tem acesso a aplicação. Nesse caso, eu estou dizendo que qualquer pessoa pode acessar a porta 80, independente do seu IP
   }
 
+  // Regra de entrada pro SSH
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   // Regra de saida
   egress {
     from_port = 0 // Qualquer porta do 0.
@@ -34,10 +42,15 @@ resource "aws_security_group" "securitygroup" {
   }
 }
 
+resource "aws_key_pair" "keypair" {
+  key_name = "terraform-keypair" // Serve para nomear o par de chaves
+  public_key = file("~/.ssh/id_ed25519.pub") // Serve para acessar a nossa posta home/bielico através do ~, depois chegar até o arquivo ssh
+}
+
 resource "aws_instance" "EC3server" {
-  ami = "ami-0de716d6197524dd9"
+  ami           = "ami-0de716d6197524dd9"
   instance_type = "t3.micro"
   user_data = file("user_data.sh")
+  key_name = aws_key_pair.keypair.key_name
   vpc_security_group_ids = [aws_security_group.securitygroup.id]
-
-
+}
