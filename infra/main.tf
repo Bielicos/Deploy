@@ -13,32 +13,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_security_group" "meu_sg" {
-  name = "securitygroup"
-  description = "Acesso total(nao use em producao"
-  vpc_id = aws_vpc.minha_vpc.id
-
-  tags = {
-    Name = "meu_sg"
-  }
-
-  ingress {
-    from_port = 0
-    to_port = 0
-    protocol = -1
-    cidr_blocks = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = -1
-    cidr_blocks = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-}
-
 resource "aws_vpc" "minha_vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
@@ -80,6 +54,36 @@ resource "aws_vpc" "minha_vpc" {
     route_table_id = aws_route_table.meu_rt.id
     subnet_id = aws_subnet.minha_subnet.id
   }
+
+  resource "aws_security_group" "meu_sg" {
+    name = "securitygroup"
+    description = "Acesso total(nao use em producao"
+    vpc_id = aws_vpc.minha_vpc.id
+
+    tags = {
+      Name = "meu_sg"
+    }
+
+    ingress {
+      from_port = 0
+      to_port = 0
+      protocol = -1
+      cidr_blocks = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    egress {
+      from_port = 0
+      to_port = 0
+      protocol = -1
+      cidr_blocks = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+  }
+
+    output "ec2_ip" {
+      value = aws_instance.meu_ec2.public_ip
+    }
 
     resource "aws_key_pair" "minha_keypair" {
       key_name = "minha_keypair"
