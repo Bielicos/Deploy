@@ -15,7 +15,7 @@ provider "aws" {
 
 resource "aws_security_group" "securitygroup" {
   name = "securitygroup"
-  description = "Permitir acesso HTTP e acesso a Internet"
+  description = "Firewall modo carnaval, ou seja, todo o tragefo liberado(Não fazer em produção)"
 
   ingress {
     from_port = 80
@@ -40,7 +40,7 @@ resource "aws_security_group" "securitygroup" {
 }
 
 resource "aws_key_pair" "minha_keypair" {
-  key_name = "terraform-keypair"
+  key_name = "minha_keypair"
   public_key = file("~/.ssh/id_ed25519.pub")
 }
 
@@ -51,14 +51,22 @@ resource "aws_vpc" "minha_vpc" {
   }
 }
 
-resource "aws_subnet" "minha_subnet" {
-  vpc_id = aws_vpc.minha_vpc.id
-  cidr_block = "10.0.1.0/24"
+  resource "aws_subnet" "minha_subnet" {
+    vpc_id = aws_vpc.minha_vpc.id
+    cidr_block = "10.0.1.0/24"
 
-  tags = {
-    Name = "minha_subnet"
+    tags = {
+      Name = "minha_subnet"
+    }
   }
-}
+
+  resource "aws_internet_gateway" "meu_ig" {
+    vpc_id = aws_vpc.minha_vpc.id
+
+    tags = {
+      Name = "meu_ig"
+    }
+  }
 
 resource "aws_instance" "meu_ec3" {
   ami           = "ami-0de716d6197524dd9"
